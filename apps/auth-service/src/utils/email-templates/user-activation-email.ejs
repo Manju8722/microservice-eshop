@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Your OTP Code</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .otp {
+            font-size: 32px;
+            color: #007bff;
+            font-weight: bold;
+            margin: 30px 0;
+            letter-spacing: 8px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Flat_tick_icon.svg" alt="Logo" class="logo" />
+        <h1>hii <%= name %>
+        </h1>
+        <h2>Your One-Time Password (OTP)</h2>
+        <p>Please use the OTP below to complete your login or verification process. This code will expire in <strong>5
+                minutes</strong>.</p>
+        <div class="otp">
+            <%= otp %>
+        </div>
+        <p>If you didn’t request this, you can safely ignore this email.</p>
+        <div class="footer">© Your Company. All rights reserved.</div>
+    </div>
+</body>
+
+</html>
