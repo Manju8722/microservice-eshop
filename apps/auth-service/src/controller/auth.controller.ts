@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import {
   checkOtpRestriction,
   handleForgotPassword,
@@ -131,6 +131,63 @@ export const login = async (
   }
 };
 
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const refrsehToken = req.cookies.refresh_token;
+  if (!refrsehToken) {
+    throw new ValidationError("Unauthrized No Refreh Token ...!");
+  }
+  const decoded = jwt.verify(
+    refrsehToken,
+    process.env.REFRESH_TOKEN_SECRETE as string
+  ) as { id: string; role: string };
+  if (!decoded || !decoded.id || !decoded.role) {
+    throw new JsonWebTokenError("Forbidden Inavlid Refreh Token Error");
+  }
+
+  const user = await prisma.users.findUnique({
+    where: { id: decoded.id },
+  });
+  if (!user) {
+    throw new AuthError("Forbidden User/Seller not found ...!");
+  }
+
+  const newAccessToken = jwt.sign(
+    {
+      id: decoded.id,
+      role: decoded.role,
+    },
+    process.env.ACCESS_TOKEN_SECRETE!,
+    {
+      expiresIn: "15m",
+    }
+  );
+
+  setCookie(res, "access_token", newAccessToken);
+
+  return res
+    .status(201)
+    .json({ success: true, message: "new Access tokn set bro...!" });
+};
+
+// get logged in user info
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = { ...req.user };
+    if (user && user?.password) delete user.password;
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    next(error);
+  }
+};
 export const userForgotPassword = async (
   req: Request,
   res: Response,
